@@ -20,7 +20,7 @@ spark = SparkSession \
 def extract(suffix):
     try:    
         path = g.glob(f"data/*.{suffix}")
-        df = spark.read.csv(path, sep = ';')
+        df = spark.read.csv(path, sep = ';', inferSchema = True)
         logging.info(f"Extracted data from {path}")
         return df
     except Exception as e:

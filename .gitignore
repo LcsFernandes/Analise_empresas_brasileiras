@@ -3,3 +3,5 @@ venv
 .env
 .vscode
 *__pycache*
+teste.ipynb
+
