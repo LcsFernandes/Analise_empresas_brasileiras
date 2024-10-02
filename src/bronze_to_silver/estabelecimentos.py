@@ -53,9 +53,10 @@ def transform(df):
                 "dt_st_cadastral": to_date(col("dt_st_cadastral"), 'yyyyMMdd'),
                 "dt_inicio": to_date(col("dt_inicio"), 'yyyyMMdd'),
                 "dt_st_especial": to_date(col("dt_st_especial"), 'yyyyMMdd'),
+                "st_cadastral": col("st_cadastral").cast("integer")
             }) \
             .filter(
-                (year(col("dt_st_cadastral")) >= 1910) & (year(col("dt_inicio")) >= 1910)
+                (year(col("dt_st_cadastral")) >= 1900) & (year(col("dt_inicio")) >= 1900)
             )
         
         df = df.repartition("uf")

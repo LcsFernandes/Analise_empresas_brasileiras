@@ -41,8 +41,23 @@ def transform(df):
         columns = ["cnpj", "identificador_socio", "nome", "cpf_cnpj_socio", "cod_qualificacao", "dt_entrada", "cod_pais", "representante_legal", "nm_representante", "cod_qualificacao_rp", "faixa_etaria"]
 
         df = df.toDF(*columns) \
-            .withColumn("dt_entrada", to_date(col("dt_entrada"), "yyyyMMdd")) 
-    
+            .withColumns({
+                "dt_entrada": to_date(col("dt_entrada"), "yyyyMMdd"),
+                "idade": when(col("faixa_etaria") == 1, "0-12") \
+                        .when(col("faixa_etaria") == 2, "13-20") \
+                        .when(col("faixa_etaria") == 3, "21-30") \
+                        .when(col("faixa_etaria") == 4, "31-40") \
+                        .when(col("faixa_etaria") == 5, "41-50") \
+                        .when(col("faixa_etaria") == 6, "51-60") \
+                        .when(col("faixa_etaria") == 7, "61-70") \
+                        .when(col("faixa_etaria") == 8, "71-80") \
+                        .when(col("faixa_etaria") == 9, "80+") \
+                        .otherwise("Não Se Aplica"),
+                "classificacao_socio": when(col("identificador_socio") == 1, "PESSOA JURIDICA") \
+                                       .when(col("identificador_socio") == 2, "PESSOA FISICA") \
+                                       .otherwise("ESTRANGEIRO")
+                }) \
+                .filter((year(col("dt_entrada")) <= 2024) & (year(col("dt_entrada")) >= 1900)) 
         
         logger.info("Transformação concluída.")
         return df

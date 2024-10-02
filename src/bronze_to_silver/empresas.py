@@ -46,6 +46,7 @@ def transform(df):
             .na.drop(subset = ["razao_social"]) \
             .filter(regexp_extract(col("cod_natureza_juridica"), r'^\d{4}$', 0) != "") \
             .withColumn("capital_social", regexp_replace("capital_social", ",", ".").cast("double"))
+                
         
         logger.info("Transformação concluída.")
         return df

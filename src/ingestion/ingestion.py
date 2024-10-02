@@ -45,7 +45,6 @@ def ingestion():
     df_natureza_juridica = extract("NATJUCSV")
     df_paises = extract("PAISCSV")
     df_qualificacoes = extract("QUALSCSV")
-    df_simples_nacional = extract("D40608")
     df_socios = extract("SOCIOCSV")
 
     load(df_cnaes, "cnaes.parquet")
@@ -56,7 +55,6 @@ def ingestion():
     load(df_natureza_juridica, "natureza_juridica.parquet")
     load(df_paises, "paises.parquet")
     load(df_qualificacoes, "qualificacoes.parquet")
-    load(df_simples_nacional, "simples_nacional.parquet")
     load(df_socios, "socios.parquet")
     
 if __name__ == "__main__":

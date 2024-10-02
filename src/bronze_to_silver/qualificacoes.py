@@ -31,6 +31,7 @@ def extract(path):
         logger.info(f"Extração concluída. Total de registros: {df.count()}")
         return df
     except Exception as e:
+        logger.error(f"Erro ao extrair dados do caminho {path}: {e}")
         raise e
     
 def transform(df):
