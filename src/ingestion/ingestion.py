@@ -31,7 +31,7 @@ def extract(suffix):
     
 def load(df, filename):
     try:
-        df.write.parquet(f"data/bronze/{filename}", mode = 'overwrite')
+        df.write.parquet(f"s3a://empresas-brasil/bronze/{filename}", mode = 'overwrite')
         logging.info(f"Loaded data to s3a://empresas-brasil/bronze/{filename}")
     except Exception as e:
         logging.error(f"Error during loading: {e}")
