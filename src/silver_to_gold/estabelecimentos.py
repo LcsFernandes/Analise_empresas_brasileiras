@@ -144,9 +144,9 @@ def main():
     try:
         logger.info("Iniciando pipeline ETL")
         
-        df_estabelecimentos = extract("s3a://empresas-brasil/silver/estabelecimentos.parquet")
-        df_municipios = extract("s3a://empresas-brasil/silver/municipios.parquet")
-        df_cnaes = extract("s3a://empresas-brasil/silver/cnaes.parquet")
+        df_estabelecimentos = extract("s3a://empresas-brasil/silver/estabelecimentos")
+        df_municipios = extract("s3a://empresas-brasil/silver/municipios")
+        df_cnaes = extract("s3a://empresas-brasil/silver/cnaes")
 
         df_total_estabelecimentos_por_st_cadastral = total_estabelecimentos_por_st_cadastral(df_estabelecimentos)
         df_novos_estabelecimentos_por_periodo = novos_estabelecimentos_por_periodo(df_estabelecimentos)
@@ -155,11 +155,11 @@ def main():
         df_estabelecimentos_por_municipio = estabelecimentos_por_municipio(df_estabelecimentos, df_municipios)
 
    
-        load(df_total_estabelecimentos_por_st_cadastral, "estabelecimentos_por_st_cadastral.parquet")
-        load(df_novos_estabelecimentos_por_periodo, "novos_estabelecimentos_por_periodo.parquet")
-        load(df_principais_atividades_economicas, "principais_atividades_economicas.parquet")
-        load(df_estabelecimentos_por_estado, "estabelecimentos_por_estado.parquet")
-        load(df_estabelecimentos_por_municipio, "estabelecimentos_por_municipio.parquet")
+        load(df_total_estabelecimentos_por_st_cadastral, "estabelecimentos_por_st_cadastral")
+        load(df_novos_estabelecimentos_por_periodo, "novos_estabelecimentos_por_periodo")
+        load(df_principais_atividades_economicas, "principais_atividades_economicas")
+        load(df_estabelecimentos_por_estado, "estabelecimentos_por_estado")
+        load(df_estabelecimentos_por_municipio, "estabelecimentos_por_municipio")
 
         logger.info("Pipeline de ETL concluído com sucesso.")
     except Exception as e:

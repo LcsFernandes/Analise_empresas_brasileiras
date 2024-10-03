@@ -2,6 +2,7 @@
 from dotenv import load_dotenv
 import os 
 import logging
+from pyspark.sql.functions import *
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -26,13 +27,14 @@ def extract(path):
     try:
         logger.info(f"Extraindo dados do caminho: {path}")
         
-        df = spark.read.parquet(path)
+        df = spark.read.option("encoding", "UTF-8").parquet(path)
         
         logger.info(f"Extração concluída. Total de registros: {df.count()}")
         return df
     except Exception as e:
         logger.error(f"Erro ao extrair dados do caminho {path}: {e}")
         raise e
+    
     
 def transform(df):
     try:
@@ -41,7 +43,8 @@ def transform(df):
         columns = ['cod_cnaes', 'descricao']
 
         df = df.toDF(*columns) \
-            .dropDuplicates(subset = ['cod_cnaes'])
+            .dropDuplicates(subset = ['cod_cnaes']) \
+            .withColumn('descricao', translate('descricao', 'çãáéíóúâêîôû', 'caaeioeioou'))
         
         logger.info("Transformação concluída.")  
         return df
@@ -65,9 +68,9 @@ def main():
     try:
         logger.info("Iniciando pipeline de ETL")
 
-        df = extract("s3a://empresas-brasil/bronze/cnaes.parquet")
+        df = extract("s3a://empresas-brasil/bronze/cnaes")
         df = transform(df)
-        load(df, "cnaes.parquet")
+        load(df, "cnaes")
 
         logger.info("Pipeline de ETL concluído com sucesso.")
 

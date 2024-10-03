@@ -87,15 +87,15 @@ def main():
     try:
         logger.info("Iniciando pipeline ETL")
         
-        df_empresas = extract("s3a://empresas-brasil/silver/empresas.parquet")
-        df_natureza_juridica = extract("s3a://empresas-brasil/silver/natureza_juridica.parquet")
+        df_empresas = extract("s3a://empresas-brasil/silver/empresas")
+        df_natureza_juridica = extract("s3a://empresas-brasil/silver/natureza_juridica")
 
         df_total_por_porte = total_por_porte(df_empresas)
         df_total_por_natureza_juridica = total_por_natureza_juridica(df_empresas, df_natureza_juridica)
        
    
-        load(df_total_por_porte, "total_por_porte.parquet")
-        load(df_total_por_natureza_juridica, "total_por_natureza_juridica.parquet")
+        load(df_total_por_porte, "total_por_porte")
+        load(df_total_por_natureza_juridica, "total_por_natureza_juridica")
 
 
         logger.info("Pipeline de ETL concluído com sucesso.")

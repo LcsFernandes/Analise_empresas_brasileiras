@@ -120,18 +120,18 @@ def main():
     try:
         logger.info("Iniciando pipeline ETL")
         
-        df_socios = extract("s3a://empresas-brasil/silver/socios.parquet")
-        df_paises = extract("s3a://empresas-brasil/silver/paises.parquet")
+        df_socios = extract("s3a://empresas-brasil/silver/socios")
+        df_paises = extract("s3a://empresas-brasil/silver/paises")
 
         df_socios_por_classificacao = socios_por_classificacao(df_socios)
         df_paises_estrangeiros = paises_estrangeiros(df_socios, df_paises)
         df_faixa_etaria = faixa_etaria(df_socios)
         df_socios_por_periodo = socios_por_periodo(df_socios)
    
-        load(df_socios_por_classificacao, "socios_por_classificacao.parquet")
-        load(df_paises_estrangeiros, "paises_estrangeiros.parquet")
-        load(df_faixa_etaria, "faixa_etaria.parquet")
-        load(df_socios_por_periodo, "socios_por_periodo.parquet")
+        load(df_socios_por_classificacao, "socios_por_classificacao")
+        load(df_paises_estrangeiros, "paises_estrangeiros")
+        load(df_faixa_etaria, "faixa_etaria")
+        load(df_socios_por_periodo, "socios_por_periodo")
 
 
         logger.info("Pipeline de ETL concluído com sucesso.")

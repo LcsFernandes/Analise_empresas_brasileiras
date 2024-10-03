@@ -63,9 +63,9 @@ def load(df, filename):
 def main():
     try:
         logger.info("Iniciando pipeline ETL")    
-        df = extract("s3a://empresas-brasil/bronze/municipios.parquet")
+        df = extract("s3a://empresas-brasil/bronze/municipios")
         df = transform(df)
-        load(df, "municipios.parquet")
+        load(df, "municipios")
 
         logger.info("Pipeline de ETL concluído com sucesso.")
     except Exception as e:
