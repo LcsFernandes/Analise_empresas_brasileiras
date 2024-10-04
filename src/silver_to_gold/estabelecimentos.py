@@ -58,15 +58,19 @@ def total_estabelecimentos_por_st_cadastral(df_estabelecimentos):
         logger.error(f"Erro ao transformar os dados: {e}")
         raise e
     
-def novos_estabelecimentos_por_periodo(df_estabelecimentos):
+def novos_estabelecimentos_por_periodo(df_estabelecimentos, df_municipios):
     try:
         logger.info("Iniciando novos_estabelecimentos_por_periodo")
 
-        df_novos_estabelecimentos_por_periodo = df_estabelecimentos.select("dt_inicio") \
+        df_novos_estabelecimentos_por_periodo = df_estabelecimentos \
+    .join(df_municipios, on = df_estabelecimentos.cod_municipio == df_municipios.cod_municipio) \
                         .withColumn("ano_mes", date_format("dt_inicio", "yyyy-MM")) \
-                        .groupBy("ano_mes") \
+                        .groupBy("ano_mes", df_estabelecimentos.cod_municipio, df_municipios.descricao) \
                         .count() \
-                        .withColumnRenamed("count", "Total") \
+                        .withColumnsRenamed({
+                            "count": "Total",
+                            "descricao": "municipio"
+                            }) \
                         .orderBy(desc("ano_mes"))
                             
         
@@ -131,7 +135,7 @@ def estabelecimentos_por_municipio(df_estabelecimentos, df_municipios):
                         
 def load(df, filename):
     try:
-        path = f"s3a://empresas-brasil/gold/{filename}"
+        path = f"data/gold/{filename}"
         logger.info(f"Carregando dados para o caminho: {path}")
         df.write.parquet(path, mode = 'overwrite')
         
@@ -144,12 +148,12 @@ def main():
     try:
         logger.info("Iniciando pipeline ETL")
         
-        df_estabelecimentos = extract("s3a://empresas-brasil/silver/estabelecimentos")
-        df_municipios = extract("s3a://empresas-brasil/silver/municipios")
+        df_estabelecimentos = extract("data/silver/estabelecimentos")
+        df_municipios = extract("data/silver/municipios")
         df_cnaes = extract("s3a://empresas-brasil/silver/cnaes")
 
         df_total_estabelecimentos_por_st_cadastral = total_estabelecimentos_por_st_cadastral(df_estabelecimentos)
-        df_novos_estabelecimentos_por_periodo = novos_estabelecimentos_por_periodo(df_estabelecimentos)
+        df_novos_estabelecimentos_por_periodo = novos_estabelecimentos_por_periodo(df_estabelecimentos, df_municipios)
         df_principais_atividades_economicas = principais_atividades_economicas(df_estabelecimentos, df_cnaes)
         df_estabelecimentos_por_estado = estabelecimentos_por_estado(df_estabelecimentos)
         df_estabelecimentos_por_municipio = estabelecimentos_por_municipio(df_estabelecimentos, df_municipios)
