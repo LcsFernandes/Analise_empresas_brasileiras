@@ -1,25 +1,13 @@
 ﻿from pyspark.sql import SparkSession
-from dotenv import load_dotenv
-import os 
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-load_dotenv()
-
-AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
-AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY")
-
-if not AWS_ACCESS_KEY or not AWS_SECRET_KEY:
-    raise ValueError("As credenciais AWS não estão definidas corretamente no arquivo .env")
-
 
 spark = SparkSession \
         .builder \
         .appName("tabela_motivos") \
-        .config("fs.s3a.access.key", AWS_ACCESS_KEY) \
-        .config("fs.s3a.secret.key", AWS_SECRET_KEY) \
         .getOrCreate()
 
 
@@ -51,7 +39,7 @@ def transform(df):
 
 def load(df, filename):
     try:
-        path = f"s3a://empresas-brasil/silver/{filename}"
+        path = f"s3://empresas-brasil/silver/{filename}"
         logger.info(f"Carregando dados para o caminho: {path}")
         
         df.write.parquet(path, mode = 'overwrite')
@@ -66,7 +54,7 @@ def main():
     try:
         logger.info("Iniciando pipeline ETL")
             
-        df = extract("s3a://empresas-brasil/bronze/motivos")
+        df = extract("s3://empresas-brasil/bronze/motivos")
         df = transform(df)
         load(df, "motivos")
 
