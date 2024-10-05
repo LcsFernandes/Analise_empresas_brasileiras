@@ -135,7 +135,6 @@ def main():
     try:
         logger.info("Iniciando pipeline ETL")
         
-        df_empresas = extract("s3://empresas-brasil/silver/empresas")
         df_estabelecimentos = extract("s3://empresas-brasil/silver/estabelecimentos")
         df_municipios = extract("s3://empresas-brasil/silver/municipios")
         df_cnaes = extract("s3://empresas-brasil/silver/cnaes")
