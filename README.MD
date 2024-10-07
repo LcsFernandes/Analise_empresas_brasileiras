@@ -6,7 +6,7 @@
 
 ## Principais Componentes:
 
-![Arquitetura](link)
+![Arquitetura](https://github.com/LcsFernandes/Analise_empresas_brasileiras/blob/main/arquitetura/Arquitetura.png)
 
  - **Fonte de dados:** arquivos CSV provenientes no [Portal de dados](https://dados.gov.br/dados/conjuntos-dadoscadastro-nacional-da-pessoa-juridica---cnpj)
 
