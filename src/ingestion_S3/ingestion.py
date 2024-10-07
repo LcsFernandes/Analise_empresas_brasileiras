@@ -39,25 +39,21 @@ def load(df, filename):
 
 
 def ingestion():
-    df_cnaes = extract("CNAECSV")
-    df_empresas = extract("EMPRECSV")
-    df_estabelecimentos = extract("ESTABELE")
-    df_motivos = extract("MOTCSV")
-    df_municipios = extract("MUNCSV")
-    df_natureza_juridica = extract("NATJUCSV")
-    df_paises = extract("PAISCSV")
-    df_qualificacoes = extract("QUALSCSV")
-    df_socios = extract("SOCIOCSV")
-
-    load(df_cnaes, "cnaes")
-    load(df_empresas, "empresas")
-    load(df_estabelecimentos, "estabelecimentos")
-    load(df_motivos, "motivos")
-    load(df_municipios, "municipios")
-    load(df_natureza_juridica, "natureza_juridica")
-    load(df_paises, "paises")
-    load(df_qualificacoes, "qualificacoes")
-    load(df_socios, "socios")
+    suffixes = {
+        "CNAECSV": "cnaes",
+        "EMPRECSV": "empresas",
+        "ESTABELE": "estabelecimentos",
+        "MOTCSV": "motivos",
+        "MUNCSV": "municipios",
+        "NATJUCSV": "natureza_juridica",
+        "PAISCSV": "paises",
+        "QUALSCSV": "qualificacoes",
+        "SOCIOCSV": "socios"
+    }
+    
+    for suffix, filename in suffixes.items():
+        df = extract(suffix)
+        load(df, filename)
     
 if __name__ == "__main__":
     ingestion()
